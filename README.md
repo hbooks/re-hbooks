@@ -1,73 +1,93 @@
-# Welcome to your Lovable project
+# React + TypeScript Application
 
-## Project info
+## Project Overview
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This is a modern web application built with React, TypeScript, and Vite. It uses Tailwind CSS for styling and shadcn-ui for component primitives. The project follows best practices for maintainability and performance.
 
-## How can I edit this code?
+## Getting Started
 
-There are several ways of editing your application.
+### Prerequisites
 
-**Use Lovable**
+- Node.js (version 18 or higher recommended)
+- npm (comes with Node.js) or yarn/pnpm
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+You can manage Node versions with [nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
-Changes made via Lovable will be committed automatically to this repo.
+### Local Development
 
-**Use your preferred IDE**
+1. **Clone the repository**
+   ```sh
+   git clone <YOUR_GIT_URL>
+   cd <YOUR_PROJECT_NAME>
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2. **Install dependencies**
+   ```sh
+   npm install
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+3. **Start the development server**
+   ```sh
+   npm run dev
+   ```
+   The app will be available at `http://localhost:5173` with hot module replacement.
 
-Follow these steps:
+### Building for Production
 
+To create an optimized production build:
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+npm run build
 ```
+The output will be in the `dist` folder, ready for deployment to any static hosting service.
 
-**Edit a file directly in GitHub**
+## Development Workflow
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Using an IDE
 
-**Use GitHub Codespaces**
+You can work on this project locally with your preferred editor (VS Code, WebStorm, etc.). All standard Git workflows apply.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
+### Editing Directly on GitHub
+
+- Navigate to the desired file on GitHub.
+- Click the pencil icon to edit.
+- Commit changes directly or create a pull request.
+
+### Using GitHub Codespaces
+
+- From the repository main page, click the green "Code" button.
 - Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Create a new codespace – you'll have a full VS Code environment in your browser.
 
-## What technologies are used for this project?
+## Technology Stack
 
-This project is built with:
+- **Vite** – Fast build tool and development server
+- **React** – UI library
+- **TypeScript** – Type-safe JavaScript
+- **Tailwind CSS** – Utility-first CSS framework
+- **shadcn-ui** – Reusable component library built on Radix UI and Tailwind
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deployment
 
-## How can I deploy this project?
+This project is a static single-page application and can be deployed to any static hosting platform.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+### Recommended Hosting Providers
 
-## Can I connect a custom domain to my Lovable project?
+- [Netlify](https://netlify.com)
+- [Vercel](https://vercel.com)
+- [GitHub Pages](https://pages.github.com)
+- AWS S3 + CloudFront
 
-Yes, you can!
+**Steps to deploy:**
+1. Run `npm run build` to generate the production build.
+2. Upload the contents of the `dist` folder to your hosting provider.
+3. Ensure the server is configured to serve `index.html` for all routes (SPA fallback).
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Custom Domain
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+To use a custom domain:
+
+1. Purchase a domain from a registrar.
+2. Update your DNS records to point to your hosting provider (e.g., add a CNAME or A record).
+3. In your hosting provider's dashboard, add the custom domain under your site settings.
+
+Refer to your hosting provider's documentation for detailed instructions.
