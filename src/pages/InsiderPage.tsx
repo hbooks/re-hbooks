@@ -67,7 +67,7 @@ const InsiderPage = () => {
             You'll receive a confirmation email immediately. After that, only what you asked for.
           </p>
           <Link
-            to="/info"
+            to="/shop"
             className="text-muted-foreground hover:text-accent transition-colors text-sm font-body underline underline-offset-4"
           >
             Just want the one-time scene? Click here
