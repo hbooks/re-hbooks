@@ -6,8 +6,8 @@ const sections = [
   {
     icon: Tag,
     title: "Discount Alerts",
-    description: "Be first to know about shop sales and member-only pricing. No spam—just occasional discounts.",
-    buttonText: "Get Discount Alerts",
+    description: "Be first to get and know about shop sales and member-only pricing. No spam—just occasional discounts.",
+    buttonText: "Sign Up get a Discount",
     formId: "auymvu",
   },
   {
