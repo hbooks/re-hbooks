@@ -3,6 +3,13 @@ import { KoFiDialog } from "react-kofi";
 import "react-kofi/dist/styles.css";
 import Footer from "@/components/Footer";
 
+// Extend Window to include sender only
+declare global {
+  interface Window {
+    sender?: any;
+  }
+}
+
 const shopItems = [
   {
     icon: FileText,
@@ -26,8 +33,12 @@ const shopItems = [
 
 const ShopPage = () => {
   const handleNotify = () => {
-    if (window.ml) {
-      window.ml("show", "BPQnm2", true);
+    if (window.sender) {
+      // Sender.net popup form
+      window.sender('popup', 'bo2gxK');
+    } else {
+      console.error('Sender.net not loaded');
+      alert('Form unavailable. Please try again later.');
     }
   };
 
