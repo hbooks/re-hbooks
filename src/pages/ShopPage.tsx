@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { FileText, Camera, Bookmark, Bell, ExternalLink, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEffect } from 'react';
+import { FileText, Camera, Bookmark, Bell, ExternalLink } from "lucide-react";
+import { KoFiButton } from "react-kofi"; // We'll use the button component only
+import "react-kofi/dist/styles.css";
 import Footer from "@/components/Footer";
 
 declare global {
@@ -34,8 +35,7 @@ const shopItems = [
 ];
 
 const ShopPage = () => {
-  const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
-
+  // Sender explicit rendering for Notify Me
   useEffect(() => {
     const FORM_ID = 'bYE929';
     const renderSenderForms = () => {
@@ -52,40 +52,80 @@ const ShopPage = () => {
     }
   }, []);
 
-  const handleKoFiClick = (url: string) => {
-    setSelectedUrl(url);
+  // Function to open Ko‑fi in a popup window
+  const openKoFiPopup = (url: string) => {
+    const width = 600;
+    const height = 700;
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
+    window.open(
+      url,
+      'ko-fi-popup',
+      `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
+    );
   };
-
-  const closeModal = () => setSelectedUrl(null);
 
   return (
     <div className="min-h-screen">
       <div className="max-w-3xl mx-auto px-6 py-16">
-        <h1 className="text-4xl md:text-5xl font-display font-light text-center mb-16">
+        <h1 className="text-4xl md:text-5xl font-display font-light text-center mb-16 animate-fade-in">
           Your Exclusive Content Awaits
         </h1>
 
         <div className="space-y-8 mb-20">
           {shopItems.map((item, i) => (
-            <div key={item.url} className="bg-card border border-border rounded-lg p-8 md:p-10 space-y-5">
+            <div
+              key={item.url}
+              className="bg-card border border-border rounded-lg p-8 md:p-10 space-y-5 animate-fade-in-up"
+              style={{ animationDelay: `${i * 0.15}s` }}
+            >
               <div className="flex items-center gap-3">
                 <item.icon className="text-accent" size={28} />
                 <h2 className="text-2xl font-display">{item.title}</h2>
               </div>
               <p className="text-muted-foreground text-sm">{item.description}</p>
-              <button
-                onClick={() => handleKoFiClick(item.url)}
-                className="bg-black hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-md transition-colors inline-flex items-center"
-              >
-                View on Ko‑fi
-              </button>
+              
+              {/* Ko‑fi button with original animation */}
+              <KoFiButton
+                username={item.url.replace('https://ko-fi.com/', '')} // Extract username from URL
+                label="View on Ko‑fi"
+                classNames={{
+                  button: "bg-black hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-md"
+                }}
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent default navigation
+                  openKoFiPopup(item.url);
+                }}
+              />
             </div>
           ))}
         </div>
 
-        {/* More Books (unchanged) */}
+        {/* More Books */}
+        <div className="text-center space-y-6 mb-20 animate-fade-in">
+          <h2 className="text-2xl font-display">More Books</h2>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="https://hpbooks.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 border border-border text-foreground hover:border-accent hover:text-accent transition-colors px-6 py-3 rounded-md font-medium"
+            >
+              Visit My Main Website <ExternalLink size={16} />
+            </a>
+            <a
+              href="https://books2read.com/u/mgQwZK"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 border border-border text-foreground hover:border-accent hover:text-accent transition-colors px-6 py-3 rounded-md font-medium"
+            >
+              Buy The Gilded Cage <ExternalLink size={16} />
+            </a>
+          </div>
+        </div>
+
         {/* Shop Updates */}
-        <div className="bg-card border border-accent/30 rounded-lg p-8 md:p-10 text-center space-y-5 gold-glow">
+        <div className="bg-card border border-accent/30 rounded-lg p-8 md:p-10 text-center space-y-5 gold-glow animate-fade-in">
           <Bell className="text-accent mx-auto" size={32} />
           <h2 className="text-2xl font-display">Get Shop Updates</h2>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
@@ -100,26 +140,6 @@ const ShopPage = () => {
         </div>
       </div>
       <Footer />
-
-      {/* Modal for Ko‑fi */}
-      {selectedUrl && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-card w-full max-w-4xl h-[80vh] rounded-2xl shadow-2xl border border-accent/20 flex flex-col">
-            <div className="flex justify-between items-center p-4 border-b border-accent/20">
-              <h3 className="font-display text-xl text-accent">Ko‑fi Shop</h3>
-              <button onClick={closeModal} className="text-muted-foreground hover:text-accent">
-                <X size={24} />
-              </button>
-            </div>
-            <iframe
-              src={selectedUrl}
-              className="w-full flex-1 rounded-b-2xl"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"
-              title="Ko-fi Shop"
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
