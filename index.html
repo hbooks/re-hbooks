@@ -13,22 +13,28 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-        <!-- Sender.net Universal (ONLY) -->
+
     <script>
-      (function (s, e, n, d, er) {
-        s['Sender'] = er;
-        s[er] = s[er] || function () {
-          (s[er].q = s[er].q || []).push(arguments)
-        }, s[er].l = 1 * new Date();
-        var a = e.createElement(n),
-            m = e.getElementsByTagName(n)[0];
-        a.async = 1;
-        a.src = d;
-        m.parentNode.insertBefore(a, m)
-      })(window, document, 'script', 'https://cdn.sender.net/accounts_resources/universal.js', 'sender');
-      sender('cb9a0b81051529');
-    </script>
-    <!-- End Sender.net Universal -->
+  window.onSenderFormsReady = function() {
+    console.log('Sender forms ready');
+  };
+</script>
+
+<script>
+  (function (s, e, n, d, er) {
+    s['Sender'] = er;
+    s[er] = s[er] || function () {
+      (s[er].q = s[er].q || []).push(arguments)
+    }, s[er].l = 1 * new Date();
+    var a = e.createElement(n),
+        m = e.getElementsByTagName(n)[0];
+    a.async = 1;
+    a.src = d + '?explicit=true&onload=onSenderFormsReady';
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://cdn.sender.net/accounts_resources/universal.js', 'sender');
+  sender('7a4d0d9dbc0897')
+</script>
+    
   </head>
   <body>
     <div id="root"></div>
