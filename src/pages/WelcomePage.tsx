@@ -9,7 +9,7 @@ const WelcomePage = () => {
       <div className="text-center max-w-2xl w-full space-y-12 animate-fade-in">
         <div className="space-y-4 animate-float">
           <h1 className="text-4xl md:text-6xl font-display font-light tracking-wide text-foreground">
-            Welcome to Raphael's Inner Circle
+            Welcome to Raphael's Exclusives Scenes
           </h1>
           <p className="text-lg text-muted-foreground font-body">
             You're in the right place.
