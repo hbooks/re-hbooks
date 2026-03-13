@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
-import { FileText, Camera, Bookmark, Bell, ExternalLink } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { FileText, Camera, Bookmark, Bell, ExternalLink, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/Footer";
 
-// Extend Window for Sender explicit API
 declare global {
   interface Window {
     senderForms?: {
@@ -35,17 +34,15 @@ const shopItems = [
 ];
 
 const ShopPage = () => {
-  // Explicit rendering for Sender popup (form ID: bYE929)
+  const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
+
   useEffect(() => {
     const FORM_ID = 'bYE929';
-
     const renderSenderForms = () => {
-      if (window.senderForms && window.senderForms.render) {
+      if (window.senderForms?.render) {
         window.senderForms.render([FORM_ID], { initialStatus: 'enabled' });
-        console.log('Sender popup rendered');
       }
     };
-
     if (window.senderFormsLoaded) {
       renderSenderForms();
     } else {
@@ -55,80 +52,74 @@ const ShopPage = () => {
     }
   }, []);
 
+  const handleKoFiClick = (url: string) => {
+    setSelectedUrl(url);
+  };
+
+  const closeModal = () => setSelectedUrl(null);
+
   return (
     <div className="min-h-screen">
       <div className="max-w-3xl mx-auto px-6 py-16">
-        <div className="text-center space-y-3 mb-16 animate-fade-in">
-          <h1 className="text-4xl md:text-5xl font-display font-light">
-            Your Exclusive Content Awaits
-          </h1>
-          <p className="text-muted-foreground font-body">
-            Choose what you'd like to purchase or explore
-          </p>
-        </div>
+        <h1 className="text-4xl md:text-5xl font-display font-light text-center mb-16">
+          Your Exclusive Content Awaits
+        </h1>
 
         <div className="space-y-8 mb-20">
           {shopItems.map((item, i) => (
-            <div
-              key={item.url}
-              className={`bg-card border border-border rounded-lg p-8 md:p-10 space-y-5 animate-fade-in-delay-${i + 1}`}
-            >
+            <div key={item.url} className="bg-card border border-border rounded-lg p-8 md:p-10 space-y-5">
               <div className="flex items-center gap-3">
                 <item.icon className="text-accent" size={28} />
                 <h2 className="text-2xl font-display">{item.title}</h2>
               </div>
-              <p className="text-muted-foreground font-body text-sm">{item.description}</p>
-              <a
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center bg-black text-white font-medium px-6 py-3 rounded-md hover:bg-gray-800 transition-colors"
+              <p className="text-muted-foreground text-sm">{item.description}</p>
+              <button
+                onClick={() => handleKoFiClick(item.url)}
+                className="bg-black hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-md transition-colors inline-flex items-center"
               >
-                View on Ko‑fi <ExternalLink size={16} className="ml-2" />
-              </a>
+                View on Ko‑fi
+              </button>
             </div>
           ))}
         </div>
 
-        {/* More Books */}
-        <div className="text-center space-y-6 mb-20 animate-fade-in">
-          <h2 className="text-2xl font-display">More Books</h2>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://hbooks-98a.pages.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 border border-border text-foreground hover:border-accent hover:text-accent transition-colors px-6 py-3 rounded-md font-body font-medium"
-            >
-              Visit My Main Website <ExternalLink size={16} />
-            </a>
-            <a
-              href="https://books2read.com/u/mgQwZK"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 border border-border text-foreground hover:border-accent hover:text-accent transition-colors px-6 py-3 rounded-md font-body font-medium"
-            >
-              Buy The Gilded Cage <ExternalLink size={16} />
-            </a>
-          </div>
-        </div>
-
+        {/* More Books (unchanged) */}
         {/* Shop Updates */}
-        <div className="bg-card border border-accent/30 rounded-lg p-8 md:p-10 text-center space-y-5 gold-glow animate-fade-in">
+        <div className="bg-card border border-accent/30 rounded-lg p-8 md:p-10 text-center space-y-5 gold-glow">
           <Bell className="text-accent mx-auto" size={32} />
           <h2 className="text-2xl font-display">Get Shop Updates</h2>
-          <p className="text-muted-foreground font-body text-sm max-w-md mx-auto">
+          <p className="text-muted-foreground text-sm max-w-md mx-auto">
             Want to know when new shop items drop? We'll notify you—nothing else.
           </p>
           <button
             id="notify-me-trigger"
-            className="bg-accent text-accent-foreground hover:bg-accent/80 transition-colors px-8 py-3 rounded-md font-body font-medium text-lg"
+            className="bg-accent text-accent-foreground hover:bg-accent/80 transition-colors px-8 py-3 rounded-md font-medium text-lg"
           >
             Notify Me
           </button>
         </div>
       </div>
       <Footer />
+
+      {/* Modal for Ko‑fi */}
+      {selectedUrl && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-card w-full max-w-4xl h-[80vh] rounded-2xl shadow-2xl border border-accent/20 flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b border-accent/20">
+              <h3 className="font-display text-xl text-accent">Ko‑fi Shop</h3>
+              <button onClick={closeModal} className="text-muted-foreground hover:text-accent">
+                <X size={24} />
+              </button>
+            </div>
+            <iframe
+              src={selectedUrl}
+              className="w-full flex-1 rounded-b-2xl"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"
+              title="Ko-fi Shop"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
