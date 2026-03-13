@@ -1,37 +1,65 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Tag, Crown, BookOpen } from "lucide-react";
 import Footer from "@/components/Footer";
+
+// Extend Window for Sender explicit API
+declare global {
+  interface Window {
+    senderForms?: {
+      render: (formIds: string[], config?: { initialStatus?: string }) => void;
+    };
+    senderFormsLoaded?: boolean;
+  }
+}
 
 const sections = [
   {
     icon: Tag,
     title: "Discount Alerts",
     description: "Be first to get and know about shop sales and member-only pricing. No spam—just occasional discounts.",
-    buttonText: "Sign Up get a Discount",
-    formId: "auymvu",
+    buttonText: "Sign Up for Discount",
+    elementId: "discount",
+    formId: "egJ9rl",
   },
   {
     icon: Crown,
     title: "Membership Access",
     description: "Join our community for exclusive scenes, behind-the-scenes content, and early looks at Book 2.",
     buttonText: "Become a Member",
-    formId: "tPRh6C",
+    elementId: "membership",
+    formId: "elY9zJ",
   },
   {
     icon: BookOpen,
     title: "Exclusive Scenes",
     description: "Get deleted scenes, behind-the-scenes content, and Book 2 leaks as they happen—delivered to your inbox.",
     buttonText: "Get Exclusive Scenes",
-    formId: "OwxtO7",
+    elementId: "signup-trigger",
+    formId: "b2kwyJ",
   },
 ];
 
 const InsiderPage = () => {
-  const handleMailerLite = (formId: string) => {
-    if (window.ml) {
-      window.ml("show", formId, true);
+  // Explicit rendering for all three Sender popups
+  useEffect(() => {
+    const FORM_IDS = ['egJ9rl', 'elY9zJ', 'b2kwyJ'];
+
+    const renderSenderForms = () => {
+      if (window.senderForms && window.senderForms.render) {
+        window.senderForms.render(FORM_IDS, { initialStatus: 'enabled' });
+        console.log('Sender popups rendered');
+      }
+    };
+
+    if (window.senderFormsLoaded) {
+      renderSenderForms();
+    } else {
+      const handleReady = () => renderSenderForms();
+      window.addEventListener('onSenderFormsLoaded', handleReady);
+      return () => window.removeEventListener('onSenderFormsLoaded', handleReady);
     }
-  };
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -53,8 +81,8 @@ const InsiderPage = () => {
               </div>
               <p className="text-muted-foreground font-body text-sm">{section.description}</p>
               <button
-                onClick={() => handleMailerLite(section.formId)}
-                className="border border-accent text-accent hover:bg-accent hover:text-accent-foreground transition-colors px-6 py-3 rounded-md font-body font-medium"
+                id={section.elementId}
+                className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold px-8 py-4 rounded-md transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg"
               >
                 {section.buttonText}
               </button>
