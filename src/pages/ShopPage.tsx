@@ -1,12 +1,15 @@
+import { useEffect } from 'react';
 import { FileText, Camera, Bookmark, Bell, ExternalLink } from "lucide-react";
-import { KoFiDialog } from "react-kofi";
-import "react-kofi/dist/styles.css";
+import { Button } from "@/components/ui/button";
 import Footer from "@/components/Footer";
 
-// Extend Window to include sender only
+// Extend Window for Sender explicit API
 declare global {
   interface Window {
-    sender?: any;
+    senderForms?: {
+      render: (formIds: string[], config?: { initialStatus?: string }) => void;
+    };
+    senderFormsLoaded?: boolean;
   }
 }
 
@@ -15,32 +18,42 @@ const shopItems = [
     icon: FileText,
     title: "Chapter Leaks",
     description: "Early looks at chapters from Book 2",
-    kofiId: "s/8e3c135503",
+    url: "https://ko-fi.com/s/8e3c135503",
   },
   {
     icon: Camera,
     title: "Behind the Scenes",
     description: "Writing process, character notes, deleted concepts",
-    kofiId: "s/e161ccb571",
+    url: "https://ko-fi.com/s/e161ccb571",
   },
   {
     icon: Bookmark,
     title: "Deleted Scenes Collection",
     description: "Every deleted scene from The Gilded Cage",
-    kofiId: "s/bc688737de",
+    url: "https://ko-fi.com/s/bc688737de",
   },
 ];
 
 const ShopPage = () => {
-  const handleNotify = () => {
-    if (window.sender) {
-      // Sender.net popup form
-      window.sender('popup', 'bo2gxK');
+  // Explicit rendering for Sender popup (form ID: bYE929)
+  useEffect(() => {
+    const FORM_ID = 'bYE929';
+
+    const renderSenderForms = () => {
+      if (window.senderForms && window.senderForms.render) {
+        window.senderForms.render([FORM_ID], { initialStatus: 'enabled' });
+        console.log('Sender popup rendered');
+      }
+    };
+
+    if (window.senderFormsLoaded) {
+      renderSenderForms();
     } else {
-      console.error('Sender.net not loaded');
-      alert('Form unavailable. Please try again later.');
+      const handleReady = () => renderSenderForms();
+      window.addEventListener('onSenderFormsLoaded', handleReady);
+      return () => window.removeEventListener('onSenderFormsLoaded', handleReady);
     }
-  };
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -57,7 +70,7 @@ const ShopPage = () => {
         <div className="space-y-8 mb-20">
           {shopItems.map((item, i) => (
             <div
-              key={item.kofiId}
+              key={item.url}
               className={`bg-card border border-border rounded-lg p-8 md:p-10 space-y-5 animate-fade-in-delay-${i + 1}`}
             >
               <div className="flex items-center gap-3">
@@ -65,15 +78,14 @@ const ShopPage = () => {
                 <h2 className="text-2xl font-display">{item.title}</h2>
               </div>
               <p className="text-muted-foreground font-body text-sm">{item.description}</p>
-              <KoFiDialog
-                color="#000000"
-                textColor="#ffffff"
-                id={item.kofiId}
-                label="View on Ko-fi"
-                width={500}
-                buttonRadius="6px"
-                padding={20}
-              />
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center bg-black text-white font-medium px-6 py-3 rounded-md hover:bg-gray-800 transition-colors"
+              >
+                View on Ko‑fi <ExternalLink size={16} className="ml-2" />
+              </a>
             </div>
           ))}
         </div>
@@ -109,7 +121,7 @@ const ShopPage = () => {
             Want to know when new shop items drop? We'll notify you—nothing else.
           </p>
           <button
-            onClick={handleNotify}
+            id="notify-me-trigger"
             className="bg-accent text-accent-foreground hover:bg-accent/80 transition-colors px-8 py-3 rounded-md font-body font-medium text-lg"
           >
             Notify Me
