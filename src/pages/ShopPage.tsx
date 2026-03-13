@@ -1,7 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FileText, Camera, Bookmark, Bell, ExternalLink } from "lucide-react";
-import { KoFiButton } from "react-kofi"; // We'll use the button component only
-import "react-kofi/dist/styles.css";
 import Footer from "@/components/Footer";
 
 declare global {
@@ -35,6 +33,8 @@ const shopItems = [
 ];
 
 const ShopPage = () => {
+  const [popupOpen, setPopupOpen] = useState(false);
+
   // Sender explicit rendering for Notify Me
   useEffect(() => {
     const FORM_ID = 'bYE929';
@@ -54,19 +54,35 @@ const ShopPage = () => {
 
   // Function to open Ko‑fi in a popup window
   const openKoFiPopup = (url: string) => {
+    setPopupOpen(true);
     const width = 600;
     const height = 700;
     const left = window.screen.width / 2 - width / 2;
     const top = window.screen.height / 2 - height / 2;
-    window.open(
+
+    const popup = window.open(
       url,
       'ko-fi-popup',
-      `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
+      `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes,toolbar=no,location=no,menubar=no`
     );
+
+    if (!popup) {
+      alert('Popup blocked. Please allow popups for this site or try again.');
+      setPopupOpen(false);
+      return;
+    }
+
+    // Monitor when popup closes
+    const timer = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(timer);
+        setPopupOpen(false);
+      }
+    }, 500);
   };
 
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen transition-all duration-300 ${popupOpen ? 'blur-sm' : ''}`}>
       <div className="max-w-3xl mx-auto px-6 py-16">
         <h1 className="text-4xl md:text-5xl font-display font-light text-center mb-16 animate-fade-in">
           Your Exclusive Content Awaits
@@ -84,19 +100,14 @@ const ShopPage = () => {
                 <h2 className="text-2xl font-display">{item.title}</h2>
               </div>
               <p className="text-muted-foreground text-sm">{item.description}</p>
-              
-              {/* Ko‑fi button with original animation */}
-              <KoFiButton
-                username={item.url.replace('https://ko-fi.com/', '')} // Extract username from URL
-                label="View on Ko‑fi"
-                classNames={{
-                  button: "bg-black hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-md"
-                }}
-                onClick={(e) => {
-                  e.preventDefault(); // Prevent default navigation
-                  openKoFiPopup(item.url);
-                }}
-              />
+
+              {/* Custom Ko‑fi button with animation */}
+              <button
+                onClick={() => openKoFiPopup(item.url)}
+                className="bg-black hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-md inline-flex items-center gap-2"
+              >
+                View on Ko‑fi <ExternalLink size={16} />
+              </button>
             </div>
           ))}
         </div>
