@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FileText, Camera, Bookmark, Bell, ExternalLink } from "lucide-react";
 import Footer from "@/components/Footer";
 
+// Extend Window for Sender explicit API
 declare global {
   interface Window {
     senderForms?: {
@@ -101,12 +102,20 @@ const ShopPage = () => {
               </div>
               <p className="text-muted-foreground text-sm">{item.description}</p>
 
-              {/* Custom Ko‑fi button with animation */}
+              {/* Custom Ko‑fi button with original animation feel */}
               <button
                 onClick={() => openKoFiPopup(item.url)}
-                className="bg-black hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-md inline-flex items-center gap-2"
+                className="group relative inline-flex items-center justify-center gap-2 bg-black text-white font-medium px-6 py-3 rounded-md overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl"
               >
-                View on Ko‑fi <ExternalLink size={16} />
+                {/* Animated background effect */}
+                <span className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                {/* Button content */}
+                <span className="relative flex items-center gap-2">
+                  View on Ko‑fi
+                  <ExternalLink size={16} className="transition-transform group-hover:translate-x-1" />
+                </span>
+                {/* Subtle pulse animation (like the original) */}
+                <span className="absolute inset-0 rounded-md animate-pulse-slow opacity-0 group-hover:opacity-100 pointer-events-none"></span>
               </button>
             </div>
           ))}
